@@ -21,7 +21,7 @@ def server():
                     print(message[:-1])
                     break
             # import pdb; pdb.set_trace()
-            conn.sendall(message[:-1].encode('utf8'))
+            conn.sendall(message.encode('utf8'))
             conn.close()
     except:
         # import pdb; pdb.set_trace()
