@@ -20,6 +20,9 @@ def server():
                 if len(part) < buffer_length:
                     print(message)
                     break
+
+            conn.sendall(message.encode('utf8'))
+
             conn.close()
     except:
         conn.close()
