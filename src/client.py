@@ -5,11 +5,12 @@ import socket
 
 def client(message):
     """."""
-    infos = socket.getaddrinfo('127.0.0.1', 5001)
+    use_port = 5001
+    infos = socket.getaddrinfo('127.0.0.1', use_port)
 
 
     if infos[0][1] == 0:
-        infos = [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('127.0.0.1', 5001))]
+        infos = [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('127.0.0.1', use_port))]
     stream_info = [i for i in infos if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
@@ -30,4 +31,3 @@ def client(message):
 
 if __name__ == '__main__':
     client(sys.argv[1])
-
