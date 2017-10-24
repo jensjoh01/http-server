@@ -13,18 +13,21 @@ def server():
             conn, addr = server.accept()
             buffer_length = 8
             message_complete = False
-            message = ""
+            message = b""
             while not message_complete:
-                part = conn.recv(buffer_length).decode('utf8')
+                part = conn.recv(buffer_length)
                 message += part
-                if '|' in message:
+                if b'|' in message:
                     print(message[:-1])
+                    message = message.decode('utf8')
                     break
             # import pdb; pdb.set_trace()
             conn.sendall(message.encode('utf8'))
             conn.close()
-    except:
+
+    except Exception:
+        print('***EXCEPTION***')
         # import pdb; pdb.set_trace()
         conn.close()
         server.close()
-
+        raise

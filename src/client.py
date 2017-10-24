@@ -12,19 +12,20 @@ def client(message):
     stream_info = [i for i in infos if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
-    prepare_message = '{}{}'.format(message, '|')
+    prepare_message = '{}{}'.format(message, u'|')
     client.sendall(prepare_message.encode('utf8'))
 
     buffer_length = 8
-    reply = ''
+    reply = b''
     while True:
         part = client.recv(buffer_length)
-        reply += part.decode('utf8')
-        if '|' in reply:
+        reply += part
+        if b'|' in reply:
+            reply = reply.decode('utf8')
             print(reply[:-1])
             break
     client.close()
-    return reply
+    return reply[:-1]
 
 
 if __name__ == '__main__':
