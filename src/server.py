@@ -15,15 +15,16 @@ def server():
             message_complete = False
             message = ""
             while not message_complete:
-                part = conn.recv(buffer_length)
-                message += part.decode('utf8')
-                if len(part) < buffer_length:
-                    print(message)
+                part = conn.recv(buffer_length).decode('utf8')
+                message += part
+                if '|' in message:
+                    print(message[:-1])
                     break
-
-            conn.sendall(message.encode('utf8'))
-
+            # import pdb; pdb.set_trace()
+            conn.sendall(message[:-1].encode('utf8'))
             conn.close()
     except:
+        # import pdb; pdb.set_trace()
         conn.close()
         server.close()
+
