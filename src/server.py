@@ -18,7 +18,7 @@ def server():
                 part = conn.recv(buffer_length)
                 message += part
                 if b'|' in message:
-                    print(message[:-1].decode('utf8'))
+                    print(message.decode('utf8')[:-1])
                     message = message.decode('utf8')
                     break
             # import pdb; pdb.set_trace()
