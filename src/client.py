@@ -1,10 +1,10 @@
-"""."""
+"""module for sending messages to a simple server application"""
 import sys
 import socket
 
 
 def client(message):
-    """."""
+    """sends a message to the server and receives a response"""
     use_port = 5001
     infos = socket.getaddrinfo('127.0.0.1', use_port)
     if infos[0][1] == 0:
