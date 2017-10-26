@@ -8,6 +8,7 @@ test_messages = ['hello', 'This is my test message', 'abcdefgh',
                  'tishasfourteen', 'specialchars∂ßå´´∂']
 # test_messages = ['specialchars∂∂ßå´∂']
 
+
 @pytest.mark.parametrize('message', test_messages)
 def test_client(message):
     """Test that the message sent and received is the same as sent."""
