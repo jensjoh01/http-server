@@ -1,6 +1,7 @@
 """Server side of http server."""
 
 import socket
+import sys
 
 
 def server():
@@ -27,22 +28,27 @@ def server():
                     print(message)
                     full_message += message
                     break
-            # import pdb; pdb.set_trace()
             conn.sendall(response_ok())
             conn.close()
 
     except KeyboardInterrupt:
         conn.close()
         server.close()
+        sys.exit()
+
+    except Exception:
+        conn.close()
+        server.close()
         raise
 
 
 def response_ok():
-    '''.'''
-    return b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
-    b'This is a complete response.\r\n|'
+    '''return a response code of 200 - OK'''
+    response = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
+    response += b'This is a complete response.\r\n|'
+    return response
 
 
 def response_error():
-    '''.'''
+    '''return a response code of 500 - Internal Server Error'''
     return b'HTTP/1.1 500 Internal Server Error\r\n\r\n|'
