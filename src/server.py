@@ -34,6 +34,11 @@ def server():
         server.close()
         sys.exit()
 
+    except Exception:
+        conn.close()
+        server.close()
+        raise
+
 
 def response_ok():
     '''return a response code of 200 - OK'''
