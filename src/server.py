@@ -3,9 +3,11 @@ import socket
 
 
 def server():
-    """Server to handle requests from client and return either response ok or error."""
+    """Server to handle requests from client
+    and return either response ok or error."""
     try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                               socket.IPPROTO_TCP)
         address = ('127.0.0.1', 5001)
         server.bind(address)
         full_message = u''
@@ -34,9 +36,12 @@ def server():
         server.close()
         raise
 
+
 def response_ok():
     '''.'''
-    return b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nThis is a complete response.\r\n|'
+    return b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
+    b'This is a complete response.\r\n|'
+
 
 def response_error():
     '''.'''
