@@ -1,11 +1,14 @@
-"""."""
+"""Module for client side of http server."""
+
 import sys
 import socket
 
 
 def client(message):
-    """."""
-    use_port = 5000
+    """Sends a message to the server and receives a response."""
+
+    use_port = 5001
+
     infos = socket.getaddrinfo('127.0.0.1', use_port)
     if infos[0][1] == 0:
         infos = [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '',

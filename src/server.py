@@ -94,3 +94,4 @@ def check_valid_host(parsed_client_message):
             return False
     except urllib.error.URLError:
         return False
+

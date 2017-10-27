@@ -1,4 +1,5 @@
 """Module to test if the request sent to the server is good, bad, or host not found."""
+
 import pytest
 
 
@@ -18,3 +19,4 @@ def test_client(message, response):
     """Test that the message sent and received is the same as sent."""
     from client import client
     assert client(message) == response
+
