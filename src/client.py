@@ -1,10 +1,12 @@
 """Module for client side of http server."""
+
 import sys
 import socket
 
 
 def client(message):
     """Sends a message to the server and receives a response."""
+
     use_port = 5001
     infos = socket.getaddrinfo('127.0.0.1', use_port)
     if infos[0][1] == 0:
