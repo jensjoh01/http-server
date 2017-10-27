@@ -1,3 +1,4 @@
 # http-server
 
-The server now receive a message from the client and return a response Ok formatted message.
+This HTTP server accepts a valid GET request and returns an HTTP 200 OK message.  If the request is invalid it returns the appropriate message.
+

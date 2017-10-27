@@ -8,6 +8,7 @@ def client(message):
     """Sends a message to the server and receives a response."""
 
     use_port = 5001
+
     infos = socket.getaddrinfo('127.0.0.1', use_port)
     if infos[0][1] == 0:
         infos = [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '',
@@ -15,7 +16,7 @@ def client(message):
     stream_info = [i for i in infos if i[1] == socket.SOCK_STREAM][0]
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
-    prepare_message = '{}{}'.format(message, u'|')
+    prepare_message = '{}{}'.format(message, u'\r\n')
     client.sendall(prepare_message.encode('utf8'))
 
     buffer_length = 8
@@ -23,12 +24,12 @@ def client(message):
     while True:
         part = client.recv(buffer_length)
         reply += part
-        if b'|' in reply:
+        if b'\r\n' in reply:
             reply = reply.decode('utf8')
-            print(reply[:-1])
+            print(reply)
             break
     client.close()
-    return reply[:-1]
+    return reply[:-2]
 
 
 if __name__ == '__main__':
