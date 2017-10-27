@@ -39,8 +39,9 @@ def server():
 
 def response_ok():
     '''.'''
-    return b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
-    b'This is a complete response.\r\n|'
+    response = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
+    response += b'This is a complete response.\r\n|'
+    return response
 
 
 def response_error():
