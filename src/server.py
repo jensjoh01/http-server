@@ -1,11 +1,13 @@
-"""."""
+"""simple server module that repeats messages back to the sender"""
 import socket
 
 
 def server():
-    """."""
+    """Echo server. Decodes and prints message, then resends the same message
+    back through the connection"""
     try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                               socket.IPPROTO_TCP)
         address = ('127.0.0.1', 5001)
         server.bind(address)
         while True:
@@ -25,9 +27,7 @@ def server():
             conn.sendall(message.encode('utf8'))
             conn.close()
 
-    except Exception:
-        print('***EXCEPTION***')
-        # import pdb; pdb.set_trace()
+    except KeyboardInterrupt:
         conn.close()
         server.close()
         raise
