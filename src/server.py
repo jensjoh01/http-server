@@ -7,7 +7,8 @@ def server():
     """HTTP Server receives simple GET requests from client, parses them,
     and returns an HTTP response message."""
     try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                               socket.IPPROTO_TCP)
         address = ('127.0.0.1', 5000)
         server.bind(address)
         response_message = u''
@@ -24,7 +25,7 @@ def server():
                     message = message.decode('utf8')
                     response_message = parse_request(message)
                     message = b""
-                    break                 
+                    break
             prepare_client_response = '{}{}'.format(response_message, '\r\n')
             conn.sendall(prepare_client_response.encode('utf8'))
             conn.close()
@@ -36,7 +37,7 @@ def server():
         except UnboundLocalError:
             server.close()
         raise
-  
+
 
 def response_ok(protocol):
     """Returns an HTTP 200 response with the protocol."""
@@ -93,4 +94,3 @@ def check_valid_host(parsed_client_message):
             return False
     except urllib.error.URLError:
         return False
-
