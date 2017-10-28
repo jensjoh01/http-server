@@ -29,7 +29,8 @@ def server():
                     response_message = parse_request(message)
                     message = b""
                     break
-            prepare_client_response = '{}{}'.format(response_message, '\r\n\r\n|')
+            prepare_client_response = '{}{}'.format(response_message,
+                                                    '\r\n\r\n|')
             conn.sendall(prepare_client_response.encode('utf8'))
             conn.close()
     except KeyboardInterrupt:
@@ -52,7 +53,7 @@ def parse_request(client_message):
         if method != 'GET':
             response_error_405()
         elif protocol != 'HTTP/1.1':
-            response_error_505()    
+            response_error_505()
         elif not is_valid_host:
             return response_error_404()
         else:
@@ -68,7 +69,7 @@ def resolve_uri(URI):
         if os.path.isdir(URI):
             body_content = handle_dir(URI)
         else:
-            body_content = handle_file(URI)      
+            body_content = handle_file(URI)
         file_type = mimetypes.guess_type(URI)
         date = email.utils.formatdate(usegmt=True)
         file_length = len(body_content)

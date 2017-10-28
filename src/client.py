@@ -27,7 +27,7 @@ def client(message):
         if b'\r\n\r\n' in reply and b'|' in reply:
             reply = reply.decode('utf8')
             break
-            
+
     client.close()
     print(reply[:-2])
 
