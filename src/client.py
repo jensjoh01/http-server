@@ -18,40 +18,28 @@ def client(message):
     client.connect(stream_info[-1])
     prepare_message = '{}{}'.format(message, u'\r\n\r\n')
     client.sendall(prepare_message.encode('utf8'))
-    buffer_length = 1024
+    buffer_length = 8
     response_header_dict = {}
     reply = b''
-    reply = client.recv(buffer_length)
-    print(reply.decode('utf-8'))
-    response_split = reply.split(b'\r\n')
-    print(response_split)
 
-    # while True:
-    #     part = client.recv(buffer_length)
-    #     reply += part
-    #     if b'\r\n\r\n' in reply:
-    #         parsed_reply = reply.split(b'\r\n')
-    #         for header_key in parsed_reply:
-    #             temp = header_key.split(b':')
-    #             print(temp)
-    #             try:
-    #                 response_header_dict[temp[0]] = temp[1]
-    #             except IndexError:
-    #                 response_header_dict[temp[0]] = ''
-    #         print(response_header_dict.keys())         
-    #         # content_length = response_header_dict[b'Content Length']
-    #         content_length = 77
-    #         response_body = reply.split(b'\r\n\r\n')
-    #         import pdb; pdb.set_trace()
-    #         print(response_body)
-    #         try:
+    while True:
+        part = client.recv(buffer_length)
+        reply += part
+        if b'\r\n\r\n' in reply and b'|' in reply:
+            print(response_header_dict.keys())         
+            # content_length = response_header_dict[b'Content Length']
+            content_length = 77
+            response_body = reply.split(b'\r\n\r\n')
+            import pdb; pdb.set_trace()
+            print(response_body)
+            try:
                 
-    #             if len(response_body[-1].decode('utf-8')) == content_length:
-    #                 reply = reply.decode('utf8')
-    #                 print(reply)
-    #                 break
-    #         except:
-    #             raise
+                if len(response_body[-1].decode('utf-8')) == content_length:
+                    reply = reply.decode('utf8')
+                    print(reply)
+                    break
+            except:
+                raise
 
             
             
