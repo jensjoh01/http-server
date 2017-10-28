@@ -19,29 +19,16 @@ def client(message):
     prepare_message = '{}{}'.format(message, u'\r\n\r\n')
     client.sendall(prepare_message.encode('utf8'))
     buffer_length = 8
-    response_header_dict = {}
     reply = b''
 
     while True:
         part = client.recv(buffer_length)
         reply += part
+        print(reply.decode('utf-8'))
         if b'\r\n\r\n' in reply and b'|' in reply:
-            print(response_header_dict.keys())         
-            # content_length = response_header_dict[b'Content Length']
-            content_length = 77
-            response_body = reply.split(b'\r\n\r\n')
-            import pdb; pdb.set_trace()
-            print(response_body)
-            try:
-                
-                if len(response_body[-1].decode('utf-8')) == content_length:
-                    reply = reply.decode('utf8')
-                    print(reply)
-                    break
-            except:
-                raise
-
-            
+            reply = reply.decode('utf8')
+            print(reply)
+            break
             
     client.close()
     return reply[:-2]

@@ -61,7 +61,7 @@ def resolve_uri(URI):
                     Date:{date}\r\n\
                     Content Length:{length}\r\n\
                     Content Type:{type}; charset=utf-8\r\n\r\n\
-                    {html}'\
+                    {html}|'\
                     .format(protocol='HTTP/1.1', httpcode='HTTP 200 OK',
                             date=date, length=file_length, type=file_type,
                             html=html)
