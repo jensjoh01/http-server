@@ -24,14 +24,12 @@ def client(message):
     while True:
         part = client.recv(buffer_length)
         reply += part
-        print(reply.decode('utf-8'))
         if b'\r\n\r\n' in reply and b'|' in reply:
             reply = reply.decode('utf8')
-            print(reply)
             break
             
     client.close()
-    return reply[:-2]
+    print(reply[:-2])
 
 
 if __name__ == '__main__':
