@@ -1,6 +1,9 @@
 """HTTP Server to handle simple GET requests from client."""
 import socket
 import urllib.request
+import mimetypes
+import email.utils
+
 
 
 def server():
@@ -21,12 +24,12 @@ def server():
             while not message_complete:
                 part = conn.recv(buffer_length)
                 message += part
-                if b'\r\n' in message:
+                if b'\r\n\r\n' in message:
                     message = message.decode('utf8')
                     response_message = parse_request(message)
                     message = b""
                     break
-            prepare_client_response = '{}{}'.format(response_message, '\r\n')
+            prepare_client_response = '{}{}'.format(response_message, '\r\n\r\n')
             conn.sendall(prepare_client_response.encode('utf8'))
             conn.close()
 
@@ -39,11 +42,30 @@ def server():
         raise
 
 
-def response_ok(protocol):
+def resolve_uri(URI):
     """Returns an HTTP 200 response with the protocol."""
-    request_200 = 'HTTP 200 OK'
-    request_ok = '{} {}'.format(protocol, request_200)
-    return request_ok
+    get_file = URI
+    with open(URI, 'rb') as file_handle:
+        file_content = file_handle.read()
+    file_type = mimetypes.guess_type(get_file)
+    date = email.utils.formatdate(usegmt=True)
+    html = """
+    <http>
+    <body>
+    <p>%s</p>
+    </body>
+    </html>
+    """ % file_content
+    file_length = len(html)
+    response_ok = '{protocol}{httpcode}\r\n\
+                    Date:{date}\r\n\
+                    Content Length:{length}\r\n\
+                    Content Type:{type}; charset=utf-8\r\n\r\n\
+                    {html}'\
+                    .format(protocol='HTTP/1.1', httpcode='HTTP 200 OK',
+                            date=date, length=file_length, type=file_type,
+                            html=html)
+    return response_ok
 
 
 def response_error_400():
@@ -76,7 +98,7 @@ def parse_request(client_message):
         elif is_valid_request is False:
             return response_error_400()
         if is_valid_request and is_valid_host:
-            return response_ok(protocol)
+            return resolve_uri(URI)
     except IndexError:
         return response_error_400()
 
@@ -94,4 +116,5 @@ def check_valid_host(parsed_client_message):
             return False
     except urllib.error.URLError:
         return False
+
 
