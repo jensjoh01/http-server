@@ -41,6 +41,26 @@ def server():
         raise
 
 
+def parse_request(client_message):
+    """Parses the message from the client and handles the response message."""
+    parsed_client_message = client_message.split()
+    try:
+        method = parsed_client_message[0]
+        URI = parsed_client_message[1]
+        protocol = parsed_client_message[2]
+        is_valid_host = check_valid_host(parsed_client_message)
+        if method != 'GET':
+            response_error_405()
+        elif protocol != 'HTTP/1.1':
+            response_error_505()    
+        elif not is_valid_host:
+            return response_error_404()
+        else:
+            return resolve_uri(URI)
+    except IndexError:
+        return response_error_400()
+
+
 def resolve_uri(URI):
     """Returns an HTTP 200 response with the protocol."""
     body_content = ''
@@ -63,26 +83,6 @@ def resolve_uri(URI):
     except OSError:
         return response_error_404()
     return response_ok
-
-
-def parse_request(client_message):
-    """Parses the message from the client and handles the response message."""
-    parsed_client_message = client_message.split()
-    try:
-        method = parsed_client_message[0]
-        URI = parsed_client_message[1]
-        protocol = parsed_client_message[2]
-        is_valid_host = check_valid_host(parsed_client_message)
-        if method != 'GET':
-            response_error_405()
-        elif protocol != 'HTTP/1.1':
-            response_error_505()    
-        elif not is_valid_host:
-            return response_error_404()
-        else:
-            return resolve_uri(URI)
-    except IndexError:
-        return response_error_400()
 
 
 def check_valid_host(parsed_client_message):
@@ -122,9 +122,9 @@ def compile_html(data):
     <p>%s</p>
     </body>
     </html>
-    """ % data.decode('utf-8')
-
+    """ % data
     return html
+
 
 def response_error_400():
     """Returns an HTTP Error 400 Bad Request."""
