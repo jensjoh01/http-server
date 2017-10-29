@@ -49,12 +49,15 @@ def parse_request(client_message):
         URI = parsed_client_message[1]
         protocol = parsed_client_message[2]
         is_valid_host = check_valid_host(parsed_client_message)
+        is_uri_secure = secure_uri(URI)
         if method != 'GET':
             response_error_405()
         elif protocol != 'HTTP/1.1':
             response_error_505()
         elif not is_valid_host:
             return response_error_404()
+        elif not is_uri_secure:
+            return response_error_400()
         else:
             return resolve_uri(URI)
     except IndexError:
@@ -72,7 +75,7 @@ def resolve_uri(URI):
         file_type = mimetypes.guess_type(URI)
         date = email.utils.formatdate(usegmt=True)
         file_length = len(body_content)
-        # this string isn't indented because it ends up in the 
+        # this string isn't indented for testing purposes
         response_ok = '{protocol}{httpcode}\r\n\
 Date:{date}\r\n\
 Content Length:{length}\r\n\
@@ -98,6 +101,14 @@ def check_valid_host(parsed_client_message):
         else:
             return False
     except urllib.error.URLError:
+        return False
+
+
+def secure_uri(URI):
+    """."""
+    if URI.split('/')[1] == 'webroot':
+        return True
+    else:
         return False
 
 
