@@ -1,28 +1,21 @@
 """HTTP Server to handle simple GET requests from client."""
-import socket
 import urllib.request
 import mimetypes
 import email.utils
 import os
 
 
-def server():
+def server(socket, address):
     """HTTP Server receives simple GET requests from client, parses them,
     and returns an HTTP response message."""
     try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
-                               socket.IPPROTO_TCP)
-        address = ('127.0.0.1', 5001)
-        server.bind(address)
         response_message = u''
         while True:
-            server.listen(1)
-            conn, addr = server.accept()
             buffer_length = 8
             message_complete = False
             message = b""
             while not message_complete:
-                part = conn.recv(buffer_length)
+                part = socket.recv(buffer_length)
                 message += part
                 if b'\r\n\r\n' in message:
                     message = message.decode('utf8')
@@ -30,11 +23,11 @@ def server():
                     message = b""
                     break
             print(response_message.encode('utf8'))
-            conn.sendall(response_message.encode('utf8'))
-            conn.close()
+            socket.sendall(response_message.encode('utf8'))
+            socket.close()
     except KeyboardInterrupt:
         try:
-            conn.close()
+            socket.close()
             server.close()
         except UnboundLocalError:
             server.close()
@@ -125,18 +118,6 @@ def handle_file(URI):
         file_content = file_handle.read()
     return file_content.encode('utf8')
     # return compile_html(file_content)
-
-
-# def compile_html(data):
-#     """."""
-#     html = """
-#     <http>
-#     <body>
-#     <p>%s</p>
-#     </body>
-#     </html>
-#     """ % data
-#     return html
 
 
 def response_error_400():
