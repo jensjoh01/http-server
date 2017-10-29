@@ -29,9 +29,8 @@ def server():
                     response_message = parse_request(message)
                     message = b""
                     break
-            prepare_client_response = '{}{}'.format(response_message,
-                                                    '\r\n\r\n|')
-            conn.sendall(prepare_client_response.encode('utf8'))
+            print(response_message.encode('utf8'))
+            conn.sendall(response_message.encode('utf8'))
             conn.close()
     except KeyboardInterrupt:
         try:
@@ -73,11 +72,12 @@ def resolve_uri(URI):
         file_type = mimetypes.guess_type(URI)
         date = email.utils.formatdate(usegmt=True)
         file_length = len(body_content)
+        # this string isn't indented because it ends up in the 
         response_ok = '{protocol}{httpcode}\r\n\
-                        Date:{date}\r\n\
-                        Content Length:{length}\r\n\
-                        Content Type:{type}; charset=utf-8\r\n\r\n\
-                        {html}'\
+Date:{date}\r\n\
+Content Length:{length}\r\n\
+Content Type:{type}; charset=utf-8\r\n\r\n\
+{html}'\
                         .format(protocol='HTTP/1.1', httpcode='HTTP 200 OK',
                                 date=date, length=file_length, type=file_type,
                                 html=body_content)
@@ -105,26 +105,27 @@ def handle_dir(URI):
     """Function that takes in a URI and determines if path leads to a directory
     if it does, then it returns the contents."""
     dir_content = '\n'.join(os.listdir(URI))
-    return compile_html(dir_content)
+    return dir_content.encode('utf8')
 
 
 def handle_file(URI):
     """."""
-    with open(URI, 'rb') as file_handle:
+    with open(URI, 'r') as file_handle:
         file_content = file_handle.read()
-    return compile_html(file_content)
+    return file_content.encode('utf8')
+    # return compile_html(file_content)
 
 
-def compile_html(data):
-    """."""
-    html = """
-    <http>
-    <body>
-    <p>%s</p>
-    </body>
-    </html>
-    """ % data
-    return html
+# def compile_html(data):
+#     """."""
+#     html = """
+#     <http>
+#     <body>
+#     <p>%s</p>
+#     </body>
+#     </html>
+#     """ % data
+#     return html
 
 
 def response_error_400():
