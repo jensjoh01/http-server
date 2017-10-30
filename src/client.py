@@ -33,8 +33,7 @@ def client(message):
             break
 
     client.close()
-    print(reply)
-    # return reply
+    return reply
 
 
 def find_body_len(message):
