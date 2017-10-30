@@ -1,6 +1,9 @@
 """HTTP Server to handle simple GET requests from client."""
 import socket
 import urllib.request
+import mimetypes
+import email.utils
+import os
 
 
 def server():
@@ -21,15 +24,14 @@ def server():
             while not message_complete:
                 part = conn.recv(buffer_length)
                 message += part
-                if b'\r\n' in message:
+                if b'\r\n\r\n' in message:
                     message = message.decode('utf8')
                     response_message = parse_request(message)
                     message = b""
                     break
-            prepare_client_response = '{}{}'.format(response_message, '\r\n')
-            conn.sendall(prepare_client_response.encode('utf8'))
+            print(response_message.encode('utf8'))
+            conn.sendall(response_message.encode('utf8'))
             conn.close()
-
     except KeyboardInterrupt:
         try:
             conn.close()
@@ -37,29 +39,6 @@ def server():
         except UnboundLocalError:
             server.close()
         raise
-
-
-def response_ok(protocol):
-    """Returns an HTTP 200 response with the protocol."""
-    request_200 = 'HTTP 200 OK'
-    request_ok = '{} {}'.format(protocol, request_200)
-    return request_ok
-
-
-def response_error_400():
-    """Returns an HTTP Error 400 Bad Request."""
-    error_400 = 'HTTP Error 400 - Bad Request'
-
-    error_message = '{}'.format(error_400)
-    return error_message
-
-
-def response_error_404():
-    """Returns an HTTP Error 404 Not Found."""
-    error_404 = 'HTTP Error 404 - Not Found'
-
-    error_message = '{}'.format(error_404)
-    return error_message
 
 
 def parse_request(client_message):
@@ -70,15 +49,44 @@ def parse_request(client_message):
         URI = parsed_client_message[1]
         protocol = parsed_client_message[2]
         is_valid_host = check_valid_host(parsed_client_message)
-        is_valid_request = method == 'GET' and protocol == 'HTTP/1.1'
-        if is_valid_host is False:
+        is_uri_secure = secure_uri(URI)
+        if method != 'GET':
+            response_error_405()
+        elif protocol != 'HTTP/1.1':
+            response_error_505()
+        elif not is_valid_host:
             return response_error_404()
-        elif is_valid_request is False:
+        elif not is_uri_secure:
             return response_error_400()
-        if is_valid_request and is_valid_host:
-            return response_ok(protocol)
+        else:
+            return resolve_uri(URI)
     except IndexError:
         return response_error_400()
+
+
+def resolve_uri(URI):
+    """Returns an HTTP 200 response with the protocol."""
+    body_content = ''
+    try:
+        if os.path.isdir(URI):
+            body_content = handle_dir(URI)
+        else:
+            body_content = handle_file(URI)
+        file_type = mimetypes.guess_type(URI)
+        date = email.utils.formatdate(usegmt=True)
+        file_length = len(body_content)
+        # this string isn't indented because the indents end up in the string
+        response_ok = '{protocol}{httpcode}\r\n\
+Date:{date}\r\n\
+Content Length:{length}\r\n\
+Content Type:{type}; charset=utf-8\r\n\r\n\
+{html}'\
+                        .format(protocol='HTTP/1.1', httpcode='HTTP 200 OK',
+                                date=date, length=file_length, type=file_type,
+                                html=body_content)
+    except OSError:
+        return response_error_404()
+    return response_ok
 
 
 def check_valid_host(parsed_client_message):
@@ -95,3 +103,65 @@ def check_valid_host(parsed_client_message):
     except urllib.error.URLError:
         return False
 
+
+def secure_uri(URI):
+    """."""
+    if URI.split('/')[1] == 'webroot':
+        return True
+    else:
+        return False
+
+
+def handle_dir(URI):
+    """Function that takes in a URI and determines if path leads to a directory
+    if it does, then it returns the contents."""
+    dir_content = '\n'.join(os.listdir(URI))
+    return dir_content
+
+
+def handle_file(URI):
+    """."""
+    with open(URI, 'r') as file_handle:
+        file_content = file_handle.read()
+    return file_content
+    # return compile_html(file_content)
+
+
+# def compile_html(data):
+#     """."""
+#     html = """
+#     <http>
+#     <body>
+#     <p>%s</p>
+#     </body>
+#     </html>
+#     """ % data
+#     return html
+
+
+def response_error_400():
+    """Returns an HTTP Error 400 Bad Request."""
+    error_400 = 'HTTP Error 400 - Bad Request'
+    error_message = '{}'.format(error_400)
+    return error_message
+
+
+def response_error_404():
+    """Returns an HTTP Error 404 Not Found."""
+    error_404 = 'HTTP Error 404 - Not Found'
+    error_message = '{}'.format(error_404)
+    return error_message
+
+
+def response_error_405():
+    """Returns an HTTP Error 405 - Method Not Allowed."""
+    error_405 = 'HTTP Error 405 - Method Not Allowed'
+    error_message = '{}'.format(error_405)
+    return error_message
+
+
+def response_error_505():
+    """Returns an HTTP Error 505 - HTTP Version Not Supported."""
+    error_505 = 'HTTP Error 505 - HTTP Version Not Supported'
+    error_message = '{}'.format(error_505)
+    return error_message
