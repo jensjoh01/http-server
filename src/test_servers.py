@@ -25,21 +25,21 @@ length_messages = [
 ]
 
 
-# @pytest.mark.parametrize('file, message', test_messages)
-# def test_client(file, message):
-#     """Test that the message sent and received is the same as sent."""
-#     from client import client
-#     from client import get_body
-#     with open(file, 'r') as file_handle:
-#         file_content = file_handle.read().encode('utf8')
-#     client_response = client(message).encode('utf8')
-#     print(len(client_response))
-#     try:
-#         assert get_body(client_response) == file_content
-#     except AssertionError:
-#         print(b"RESPONSE:\n" + get_body(client_response) + b'\nEXPECTED:\n' +
-#               file_content)
-#         raise
+@pytest.mark.parametrize('file, message', test_messages)
+def test_client(file, message):
+    """Test that the message sent and received is the same as sent."""
+    from client import client
+    from client import get_body
+    with open(file, 'r') as file_handle:
+        file_content = file_handle.read().encode('utf8')
+    client_response = client(message).encode('utf8')
+    print(len(client_response))
+    try:
+        assert get_body(client_response) == file_content
+    except AssertionError:
+        print(b"RESPONSE:\n" + get_body(client_response) + b'\nEXPECTED:\n' +
+              file_content)
+        raise
 
 
 @pytest.mark.parametrize('message, expected_value', length_messages)
