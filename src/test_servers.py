@@ -31,14 +31,18 @@ def test_client(file, message):
     from client import client
     from client import get_body
     with open(file, 'r') as file_handle:
-        file_content = file_handle.read().encode('utf8')
+        file_content = file_handle.read()
+        byte_content = file_content.encode('utf8')
     client_response = client(message).encode('utf8')
     print(len(client_response))
+    print(len(get_body(client_response)))
+    print(len(byte_content))
+
     try:
-        assert get_body(client_response) == file_content
+        assert get_body(client_response) == byte_content
     except AssertionError:
-        print(b"RESPONSE:\n" + get_body(client_response) + b'\nEXPECTED:\n' +
-              file_content)
+        print(b"RESPONSE:" + get_body(client_response) + b' EXPECTED:' +
+              byte_content)
         raise
 
 

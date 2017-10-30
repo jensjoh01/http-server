@@ -25,6 +25,7 @@ def client(message):
     while True:
         part = client.recv(buffer_length)
         reply += part
+        reply = reply.replace(b'\\n', b'\n')
         if body_len == 0 and parse_body_len(reply) > 0:
             body_len = parse_body_len(reply)
         if body_len > 0 and find_body_len(reply) >= body_len:
@@ -51,9 +52,7 @@ def get_body(message):
     divider_index = message.find(b'\r\n\r\n')
     if divider_index < 0:
         return None
-    divider_index += 4
-    print(message[divider_index:])
-    return message[divider_index:]
+    return message[divider_index + 4:]
 
 
 def parse_body_len(message):
