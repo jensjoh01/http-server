@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup (
+setup(
     name="Socket Echo Server",
     package_dir={'': 'src'},
     my_modules=['server', 'client'],
