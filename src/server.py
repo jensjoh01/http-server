@@ -68,7 +68,7 @@ def resolve_uri(URI):
         file_type = mimetypes.guess_type(URI)
         date = email.utils.formatdate(usegmt=True)
         file_length = len(body_content)
-        # this string isn't indented for testing purposes
+        # this string isn't indented because the indents end up in the string
         response_ok = '{protocol}{httpcode}\r\n\
 Date:{date}\r\n\
 Content Length:{length}\r\n\
@@ -109,14 +109,14 @@ def handle_dir(URI):
     """Function that takes in a URI and determines if path leads to a directory
     if it does, then it returns the contents."""
     dir_content = '\n'.join(os.listdir(URI))
-    return dir_content.encode('utf8')
+    return dir_content
 
 
 def handle_file(URI):
     """."""
     with open(URI, 'r') as file_handle:
         file_content = file_handle.read()
-    return file_content.encode('utf8')
+    return file_content
     # return compile_html(file_content)
 
 
