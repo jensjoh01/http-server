@@ -34,11 +34,7 @@ def client(message):
 
     client.close()
     print(reply)
-    return(reply)
-
-
-if __name__ == '__main__':
-    client(sys.argv[1])
+    # return reply
 
 
 def find_body_len(message):
@@ -52,7 +48,9 @@ def get_body(message):
     divider_index = message.find(b'\r\n\r\n')
     if divider_index < 0:
         return None
-    return message[divider_index + 4:]
+    divider_index += 4
+    # print(message[divider_index:])
+    return message[divider_index:]
 
 
 def parse_body_len(message):
@@ -60,8 +58,12 @@ def parse_body_len(message):
     if length_start < 0:
         return -1
     length_start += len(b'Content Length:')
-    lengh_end = message[length_start:].find(b'\r')
-    if lengh_end < 0:
+    length_end = message[length_start:].find(b'\r')
+    if length_end < 0:
         return -1
-    number = int(message[length_start: length_start + lengh_end])
+    number = int(message[length_start: length_start + length_end])
     return number
+
+
+if __name__ == '__main__':
+    client(sys.argv[1])
