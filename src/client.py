@@ -33,7 +33,6 @@ def client(message):
             break
 
     client.close()
-    print(reply)
     return reply
 
 
