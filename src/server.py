@@ -1,10 +1,11 @@
-"""simple server module that repeats messages back to the sender"""
+# -*- coding: utf-8 -*-
+"""Simple server module that repeats messages back to the sender."""
 import socket
 
 
 def server():
     """Echo server. Decodes and prints message, then resends the same message
-    back through the connection"""
+    back through the connection."""
     try:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
                                socket.IPPROTO_TCP)
@@ -20,14 +21,15 @@ def server():
                 part = conn.recv(buffer_length)
                 message += part
                 if b'|' in message:
-                    print(message.decode('utf8')[:-1])
                     message = message.decode('utf8')
                     break
-            # import pdb; pdb.set_trace()
             conn.sendall(message.encode('utf8'))
             conn.close()
+            print(message[:-1])
 
     except KeyboardInterrupt:
-        conn.close()
         server.close()
-        raise
+
+
+if __name__ == '__main__':
+    server()
