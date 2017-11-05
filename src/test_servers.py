@@ -11,12 +11,13 @@ def test_response_ok_from_server():
 def test_response_ok_from_server_has_http():
     """Test that response has HTTP/1.1 protocol."""
     from client import client
-    assert 'HTTP/1.1' in client('message') 
-    
+    assert 'HTTP/1.1' in client('message')
+
+
 def test_response_ok_from_server_has_proper_form():
-    """Test that response has HTTP/1.1 protocol."""
+    """Test that response has proper format."""
     from client import client
-    response = client('message') 
+    response = client('message')
     parsed = response.split()
     assert parsed[0] == 'HTTP/1.1'
     assert parsed[1] == '200'
