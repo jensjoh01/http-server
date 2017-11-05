@@ -25,11 +25,10 @@ def client(message):
         reply += part
         if b'|' in reply:
             reply = reply.decode('utf8')
-            print(reply[:-1])
             break
     client.close()
     return reply[:-1]
 
 
 if __name__ == '__main__':
-    client(sys.argv[1])
+    print(client(sys.argv[1]))

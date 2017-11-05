@@ -5,8 +5,8 @@ import sys
 
 
 def server():
-    """Server to handle requests from client
-    and return either response ok or error."""
+    """Server to handle requests from client and return either 
+    response ok or error."""
 
     try:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
@@ -25,30 +25,29 @@ def server():
                 message += part
                 if b'|' in message:
                     message = message.decode('utf8')[:-1]
-                    print(message)
                     full_message += message
                     break
             conn.sendall(response_ok())
             conn.close()
+            print(message)
 
     except KeyboardInterrupt:
         conn.close()
         server.close()
         sys.exit()
 
-    except Exception:
-        conn.close()
-        server.close()
-        raise
-
 
 def response_ok():
-    '''return a response code of 200 - OK'''
+    """Return a response code of 200 - OK."""
     response = b'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n'
     response += b'This is a complete response.\r\n|'
     return response
 
 
 def response_error():
-    '''return a response code of 500 - Internal Server Error'''
+    """Return a response code of 500 - Internal Server Error."""
     return b'HTTP/1.1 500 Internal Server Error\r\n\r\n|'
+
+
+if __name__ == '__main__':
+    server()
