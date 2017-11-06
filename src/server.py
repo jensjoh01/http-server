@@ -7,7 +7,8 @@ def server():
     """HTTP Server receives simple GET requests from client, parses them,
     and returns an HTTP response message."""
     try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM,
+                               socket.IPPROTO_TCP)
         address = ('127.0.0.1', 5000)
         server.bind(address)
         response_message = u''
@@ -32,6 +33,7 @@ def server():
     except KeyboardInterrupt:
         conn.close()
         server.close()
+
 
 
 def response_ok(protocol):

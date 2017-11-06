@@ -8,3 +8,4 @@ This HTTP server accepts a valid GET request and returns an HTTP 200 OK message.
 * In your terminal, navigate into the `src` folder.
 * Open a second terminal window and run `python server.py` from terminal line.
 * In the other terminal run `python client.py <message>`.
+
