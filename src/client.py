@@ -1,10 +1,11 @@
-"""."""
+"""Client module to send a basic HTTP request."""
 import sys
 import socket
 
 
 def client(message):
-    """."""
+    """Client function that takes in a message to send to server and 
+        then return the reply."""
     use_port = 5000
     infos = socket.getaddrinfo('127.0.0.1', use_port)
     if infos[0][1] == 0:
@@ -22,11 +23,10 @@ def client(message):
         reply += part
         if b'\r\n' in reply:
             reply = reply.decode('utf8')
-            print(reply)
             break
     client.close()
     return reply[:-2]
 
 
 if __name__ == '__main__':
-    client(sys.argv[1])
+    print(client(sys.argv[1]))

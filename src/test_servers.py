@@ -9,7 +9,9 @@ test_messages = [
     ('GET /path/index.html HTTP/1.1 www.example.com', 'HTTP Error 404 - Not Found'),
     ('GET /path/index.html HTTP/1.1 Host: www.gobly/gook.com', 'HTTP Error 404 - Not Found'),
     ('GET /path/index.html HTTP/1.1 Host: www.google.com', 'HTTP/1.1 HTTP 200 OK'),
-    ('hello?...anybody there?', 'HTTP Error 400 - Bad Request')
+    ('hello?...anybody there?', 'HTTP Error 400 - Bad Request'),
+    ('', 'HTTP Error 400 - Bad Request'),
+    ('Host: www.example.com GET /path/index.html HTTP/1.1', 'HTTP Error 400 - Bad Request')
 ]
 
 
