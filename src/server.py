@@ -35,7 +35,6 @@ def server():
         server.close()
 
 
-
 def response_ok(protocol):
     """Return an HTTP 200 response with the protocol."""
     request_200 = 'HTTP 200 OK'
