@@ -5,7 +5,7 @@ import socket
 
 
 def client(message):
-    """Sends a message to the server and receives a response."""
+    """Send a message to the server and receives a response."""
 
     use_port = 5001
     infos = socket.getaddrinfo('127.0.0.1', use_port)
